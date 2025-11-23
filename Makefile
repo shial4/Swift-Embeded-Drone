@@ -10,8 +10,7 @@
 ##===----------------------------------------------------------------------===##
 
 # Paths
-REPOROOT         := /Users/szymonlorenz/Downloads/swift-embedded-examples-main
-# REPOROOT         := $(shell git rev-parse --show-toplevel)
+REPOROOT         := $(shell git rev-parse --show-toplevel)
 TOOLSROOT        := $(REPOROOT)/Tools
 TOOLSET          := $(TOOLSROOT)/Toolsets/pico.json
 MACHO2UF2        := $(TOOLSROOT)/macho2uf2.py

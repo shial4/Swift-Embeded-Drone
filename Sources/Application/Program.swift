@@ -13,7 +13,7 @@ struct Program {
     var irReceiver = IRReceiver(board: board, pin: .d13)
 
     var rollCmd = 0  // -100…+100
-    var throttle = 0           // 0…100
+    var throttle = 0 // 0…100
 
     let stepPerFrame: Int = 12  // how fast command ramps while holding a button
     let autoCenterPerFrame: Int = 6  // how fast it recenters when no button is held
