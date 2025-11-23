@@ -14,7 +14,7 @@ Based on the Raspberry Pi Pico LED blink example from https://github.com/swiftla
 
 The Pico is built around the dual-core RP2040 MCU and exposes 26 usable GPIO pins (3.3 V only) on its 40-pin header. Power rails (VBUS, VSYS, 3V3, GND) and the SWD pads sit on the same edge, making it easy to feed the H-bridge and servos while keeping logic pins isolated. The diagram below labels every pin; the connections above land on the left header near the USB socket for short, low-noise runs to the motor driver and servos.
 
-<img src="https://au.mouser.com/images/marketingid/2021/microsites/161736712/raspberrypipicopinout.png">
+![Pico drone breadboard setup](Resources/raspberrypipicopinout.png.jpeg)
 
 ## Architecture
 - **Runtime loop**: `Program.run()` sets up peripherals, blinks the LED, then enters a scheduler-like loop that services servos and motor in a non-blocking fashion. Each device returns the microseconds until its next edge; the loop sleeps until the earliest deadline to keep timing stable without interrupts.
