@@ -23,6 +23,89 @@ The Pico is built around the dual-core RP2040 MCU and exposes 26 usable GPIO pin
 - **Servo control**: `Servo` emits 50 Hz frames with slew limiting and angle clamps. `updateElevon` maps roll command to left/right elevons, keeping mechanical limits in check.
 - **Command shaping**: Buttons ramp `rollCmd` up/down and auto-center when released. Holding both buttons ramps throttle up; releasing drops back to zero and idles the motor.
 
+Simple wiring diagram
+```
+                     ┌──────────────────────┐
+                     │   4×AA BATTERY PACK  │
+                     │       ~6.0 V         │
+                     └───────┬───────┬──────┘
+                             │       │
+                           (+)       (-)
+                             │       │
+         +-------------------+       +-----------------------------+
+         |                                                 GND BUS |
+         v                                                         v
+
+ ┌──────────────────────────────────────────────────────────────────────────┐
+ │                               Raspberry Pi Pico                          │
+ │                                                                          │
+ │   VSYS  ◄────────────────────────────── +6V                               │
+ │   GND   ◄────────────────────────────── GND                               │
+ │                                                                          │
+ │   GP22 ───────────────► LED (anode)                                      │
+ │                    LED cathode ───────► GND                               │
+ │                                                                          │
+ │   GP13 ───────────────► IR Receiver OUT                                   │
+ │   3V3  ───────────────► IR Receiver VCC                                   │
+ │   GND  ───────────────► IR Receiver GND                                   │
+ │                                                                          │
+ │   GP2  ───────────────► Servo L signal                                    │
+ │   GP3  ───────────────► Servo R signal                                    │
+ │                                                                          │
+ │   GP19 ───────────────► L9110S IN1                                        │
+ │   GP18 ───────────────► L9110S IN2                                        │
+ │                                                                          │
+ └──────────────────────────────────────────────────────────────────────────┘
+
+
+                 +6V BUS ──────────────────────────────────────+
+                 │                                             │
+                 v                                             v
+
+        ┌───────────────┐                            ┌─────────────────┐
+        │   SERVO L     │                            │    SERVO R      │
+        │   SG90        │                            │    SG90         │
+        │  V+ ◄─────────┴──────────────► +6V         │  V+ ◄──────────────► +6V
+        │  GND◄────────────────────────► GND         │  GND◄────────────────► GND
+        │  SIG◄────────────── GP2                   │  SIG◄────────────── GP3
+        └───────────────┘                            └─────────────────┘
+
+
+                          L9110S MOTOR DRIVER MODULE
+
+                  +6V ───────────────► MOTOR POWER VCC
+                  GND ───────────────► MOTOR POWER GND
+
+      GP19 ─────────► IN1     OUT1 ──────────────► Motor +
+      GP18 ─────────► IN2     OUT2 ──────────────► Motor –
+```
+
+Here is a clean, minimal “quick map” of your the setup.
+
+```
+Pico Pins (left side):                        Pico Pins (right side):
+1   GP0                                        40  VBUS
+2   GP1                                        39  VSYS      ← Battery + (4×AA)
+3   GND        ← common GND                    38  GND       ← common GND
+4   GP2        ← Servo L signal                37  3V3       ← IR Receiver VCC
+5   GP3        ← Servo R signal                36  3V3_EN
+6   GP4                                        35  ADC_VREF
+7   GP5                                        34  GP28
+8   GND        ← can use (servo/IR/motor GND)  33  GND       ← common GND
+9   GP6                                        32  GP27
+10  GP7                                        31  GP26
+11  GP8                                        30  RUN
+12  GP9                                        29  GP22
+13  AGND      ← safe GND                       28  GND       ← common GND
+14  GP10                                       27  GP21
+15  GP11                                       26  GP20
+16  GP12                                       25  GP19      ← Motor IN1 (L9110S IN1)
+17  GP13      ← IR Receiver OUT                24  GP18      ← Motor IN2 (L9110S IN2)
+18  GND       ← common GND                     23  GND       ← common GND
+19  GP14                                       22  GP17
+20  GP15                                       21  GP16
+```
+
 ## RP2040 HAL and Support changes
 - GPIO writes now map each bit to the intended pin (bit 3 no longer toggles pin 0), fixing incorrect patterns when writing full bytes to multiple pins. See `Sources/RP2040/HAL/Digital.swift` (`write(_:to:)`).
 - `setMode` configures pads for inputs (with optional pull-up/down) and outputs with selectable drive strengths, ensuring pins are in a safe state before use. The new cases set pulls, input/output enables, slew rate, and drive strength in `Sources/RP2040/HAL/Digital.swift`.
