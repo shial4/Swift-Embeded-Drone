@@ -80,7 +80,7 @@ Simple wiring diagram
       GP18 ─────────► IN2     OUT2 ──────────────► Motor –
 ```
 
-Here is a clean, minimal “quick map” of your the setup.
+Here is a minimal “quick map” of the setup.
 
 ```
 Pico Pins (left side):                        Pico Pins (right side):
