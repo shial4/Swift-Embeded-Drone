@@ -11,6 +11,7 @@ Based on the Raspberry Pi Pico LED blink example from https://github.com/swiftla
 - Two momentary buttons on GPIO 14 and GPIO 15 (roll left/right + throttle ramp when both held)
 - Optional IR receiver on GPIO 13 (wired as a pull-up input placeholder)
 - Onboard/green LED on GPIO 22 for boot heartbeat
+- Airframe based on the “K+ 3D Printed Flying wing FPV Drone” model
 
 The Pico is built around the dual-core RP2040 MCU and exposes 26 usable GPIO pins (3.3 V only) on its 40-pin header. Power rails (VBUS, VSYS, 3V3, GND) and the SWD pads sit on the same edge, making it easy to feed the H-bridge and servos while keeping logic pins isolated. The diagram below labels every pin; the connections above land on the left header near the USB socket for short, low-noise runs to the motor driver and servos.
 
